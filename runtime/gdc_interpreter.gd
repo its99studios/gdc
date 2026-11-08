@@ -117,6 +117,8 @@ func start_dialogue(
 
 	dialogue_started.emit(dialogue_identifier)
 
+	process_instructions()
+	
 	return true
 
 func process_instructions() -> void:
