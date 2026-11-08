@@ -1,0 +1,53 @@
+name: GDC Latest
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gdc-latest-release
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    name: Publish Development Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Package GDC
+        run: |
+          git archive \
+            --format=zip \
+            --prefix=gdc/ \
+            "$GITHUB_SHA" \
+            -o GDC.zip
+
+      - name: Update latest tag
+        run: |
+          git tag --force latest "$GITHUB_SHA"
+          git push origin refs/tags/latest --force
+
+      - name: Publish GDC Latest
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: GDC Latest
+          body: |
+            Development release for commit `${{ github.sha }}`.
+
+            This is a **development release**, meaning it is **likely not tested** and **you should only download it for testing the plugin.**
+          prerelease: true
+          make_latest: false
+          files: GDC.zip
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
