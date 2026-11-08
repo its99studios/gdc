@@ -12,7 +12,8 @@ const KEYWORDS: Array[String] = [
 	"wait",
 	"choice",
 	"event",
-	"end"
+	"end",
+	"switch"
 ]
 
 
