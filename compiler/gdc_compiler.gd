@@ -72,6 +72,9 @@ func _compile_instruction(
 
 	elif instruction is GDCChoiceInstruction:
 		return _compile_choice(instruction)
+	
+	elif instruction is GDCEndInstruction:
+		return GDCCompiledEnd.new()
 
 	push_error(
 		"GDC Compiler: Unsupported instruction type '%s'."
