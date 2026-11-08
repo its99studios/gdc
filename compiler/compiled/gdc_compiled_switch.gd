@@ -3,7 +3,7 @@ class_name GDCCompiledSwitch
 extends GDCCompiledInstruction
 
 
-var dialogue_identifier: String
+@export var dialogue_identifier: String
 
 
 func _init(p_dialogue_identifier: String = "") -> void:
