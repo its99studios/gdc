@@ -146,6 +146,12 @@ func _parse_instruction_block(
 
 		elif _match_keyword("autoadvance"):
 			_parse_autoadvance(instructions)
+		
+		elif _match_keyword("event"):
+			instructions.append(_parse_event())
+		
+		elif _match_keyword("switch"):
+			instructions.append(_parse_switch())
 
 		else:
 			_error("Unexpected instruction.")
@@ -313,6 +319,15 @@ func _parse_choice() -> GDCChoiceInstruction:
 
 	return GDCChoiceInstruction.new(options)
 
+# Parses a switch instruction.
+func _parse_switch() -> GDCSwitchInstruction:
+	var identifier := _consume_identifier(
+		"Expected a dialogue identifier after 'switch'."
+	)
+
+	_consume_line_end()
+
+	return GDCSwitchInstruction.new(identifier)
 
 # Consumes an identifier.
 func _consume_identifier(message: String) -> String:
