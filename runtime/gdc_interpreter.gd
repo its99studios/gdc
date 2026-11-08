@@ -118,7 +118,7 @@ func start_dialogue(
 	dialogue_started.emit(dialogue_identifier)
 
 	process_instructions()
-	
+
 	return true
 
 func process_instructions() -> void:
@@ -167,6 +167,10 @@ func _execute_instruction(
 	elif instruction is GDCCompiledEnd:
 		_finish_dialogue()
 		return false
+	
+	elif instruction is GDCCompiledSwitch:
+		_execute_switch(instruction)
+		return true
 
 	execution_error.emit(
 		"Unsupported instruction type: %s"
@@ -215,6 +219,39 @@ func _execute_choice(
 
 func _execute_event(instruction: GDCCompiledEvent) -> void:
 	event_requested.emit(instruction.identifier)
+
+func _execute_switch(instruction: GDCCompiledSwitch) -> void:
+	var target: GDCCompiledDialogue = null
+
+	for dialogue in _compiled_file.dialogues:
+		if dialogue.identifier == instruction.dialogue_identifier:
+			target = dialogue
+			break
+
+	if target == null:
+		execution_error.emit(
+			"Dialogue '%s' was not found."
+			% instruction.dialogue_identifier
+		)
+		_stop_with_error()
+		return
+
+	_timer_generation += 1
+	
+	_state.execution_stack.clear()
+	_state.current_dialogue = target
+	_state.current_speaker = _compiled_file.character
+
+	_state.is_waiting_for_input = false
+	_state.is_waiting_for_choice = false
+	_state.is_waiting_for_timer = false
+	_state.available_choices.clear()
+
+	_context.dialogue_id = instruction.dialogue_identifier
+
+	_state.push_frame(
+		GDCExecutionFrame.new(target.instructions)
+	)
 
 func _finish_dialogue() -> void:
 	var identifier := _context.dialogue_id

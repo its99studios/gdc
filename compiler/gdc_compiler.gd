@@ -75,6 +75,11 @@ func _compile_instruction(
 	
 	elif instruction is GDCEndInstruction:
 		return GDCCompiledEnd.new()
+	
+	elif instruction is GDCSwitchInstruction:
+		return GDCCompiledSwitch.new(
+			instruction.dialogue_identifier
+		)
 
 	push_error(
 		"GDC Compiler: Unsupported instruction type '%s'."
