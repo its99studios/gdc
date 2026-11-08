@@ -118,16 +118,15 @@ func _parse_instruction_block(
 
 			break
 
-		if stop_at_end and _check_keyword("end"):
-			_advance()
-			_consume_line_end()
-			ended = true
-			break
-
 		if _check_keyword("end"):
-			_error("'end' can only terminate a dialogue.")
 			_advance()
 			_consume_line_end()
+
+			if stop_at_end:
+				ended = true
+				break
+
+			instructions.append(GDCEndInstruction.new())
 			continue
 
 		if _match_keyword("say"):
