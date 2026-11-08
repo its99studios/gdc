@@ -161,6 +161,10 @@ func _execute_instruction(
 	elif instruction is GDCCompiledEvent:
 		_execute_event(instruction)
 		return true
+	
+	elif instruction is GDCCompiledEnd:
+		_finish_dialogue()
+		return false
 
 	execution_error.emit(
 		"Unsupported instruction type: %s"
