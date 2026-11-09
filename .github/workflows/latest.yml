@@ -34,7 +34,7 @@ jobs:
           tag_name: latest
           name: GDC Latest
           body: |
-            Development release for commit `${{ github.sha }}`.
+            Development release for commit [`${GITHUB_SHA:0:7}`](https://github.com/${{ github.repository }}/commit/${GITHUB_SHA}).
 
             This is a **development release**, meaning it is **likely not tested** and **you should only download it for testing the plugin.**
           prerelease: true
