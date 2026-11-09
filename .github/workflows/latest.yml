@@ -23,16 +23,29 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check for existing version tag
+        id: version
+        run: |
+          if git tag --points-at "$GITHUB_SHA" | grep -q '^v[0-9]'; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Commit already has a version tag. Skipping development release."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Update latest tag
+        if: steps.version.outputs.skip != 'true'
         run: |
           git tag --force latest "$GITHUB_SHA"
           git push origin refs/tags/latest --force
 
       - name: Get short commit SHA
+        if: steps.version.outputs.skip != 'true'
         id: commit
         run: echo "short_sha=${GITHUB_SHA:0:7}" >> "$GITHUB_OUTPUT"
 
       - name: Publish GDC Latest
+        if: steps.version.outputs.skip != 'true'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
