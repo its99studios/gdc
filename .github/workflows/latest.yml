@@ -28,17 +28,20 @@ jobs:
           git tag --force latest "$GITHUB_SHA"
           git push origin refs/tags/latest --force
 
+      - name: Get short commit SHA
+        id: commit
+        run: echo "short_sha=${GITHUB_SHA:0:7}" >> "$GITHUB_OUTPUT"
+
       - name: Publish GDC Latest
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
           name: GDC Latest
           body: |
-            Development release for commit [`${GITHUB_SHA:0:7}`](https://github.com/${{ github.repository }}/commit/${GITHUB_SHA}).
+            Development release for commit [`${{ steps.commit.outputs.short_sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }}).
 
             This is a **development release**, meaning it is **likely not tested** and **you should only download it for testing the plugin.**
           prerelease: true
           make_latest: false
-          fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
