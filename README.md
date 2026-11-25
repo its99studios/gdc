@@ -1,6 +1,6 @@
 *From v1.1.0 onward, the plugin uses the .ngdc (**Not GDScript Compiled**) extension to remove conflicts with .gdc.*
 # GDC - Godot Dialogue Compositor
-![Icon is Godot but pink ;)](icon.svg)
+![Icon is Godot but pink ;)](export/icon.svg)
 
 GDC is a **language and runtime made for handling dialogue in Godot**. It has syntax similar to GDScript and integrates perfectly into Godot.
 
